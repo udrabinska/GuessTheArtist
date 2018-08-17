@@ -4,9 +4,15 @@ import java.util.Scanner;
 public class GuessTheArtist {
     public static void main(String[] args) {
         String artist = "Adam Mickiewicz";
+        char[] artistChar = artist.toLowerCase().toCharArray();
         char[] guess = new char[artist.length()];
+        // TODO: how to hide space with '-' but allow guessing it as well as char (or winning without guessing it at all)
         for (int i = 0; i < artist.length(); i++) {
-            guess[i] = '-';
+            if (!Character.isWhitespace(artist.charAt(i))) {
+                guess[i] = '-';
+            } else {
+                guess[i] = ' ';
+            }
         }
         int guessCounter = 10;
         boolean won = false;
@@ -17,36 +23,40 @@ public class GuessTheArtist {
         System.out.println();
 
         do {
-            for (int i = 0; i < artist.length(); i++) {
-                System.out.print(guess[i]);
+            for (int j = 0; j < artist.length(); j++) {
+                System.out.print(guess[j]);
             }
             System.out.println(" ");
             System.out.println("Guess the letter.");
-            String letter = scanner.nextLine();
+            char letter = scanner.next().charAt(0);
             // TODO: allow the user to type only one letter / ensure it's only one letter
             System.out.println("Your letter: " + letter);
 
-            // TODO: reveal all occurrences of the letter, do not show the first one "A" when just pressed enter
-            if (artist.toLowerCase().contains(letter)) {
-                int index = artist.indexOf(letter);
-                guess[index] = artist.charAt(index);
-                if (Arrays.toString(guess).equals(artist.toLowerCase())) {
-                    won = true;
-                    break;
+            // TODO: reveal upper cases when it's needed
+            int goodGuesses = 0;
+            for (int k = 0; k < artist.length(); k++) {
+                if (letter == artistChar[k]) {
+                    guess[k] = letter;
+                    goodGuesses++;
+                    if (Arrays.toString(guess).equals(Arrays.toString(artistChar).toLowerCase())) {
+                        won = true;
+                        break;
+                    }
                 }
-            } else {
-                System.out.println("There is no \"" + letter +"\" in the artist name.");
+            }
+            if (goodGuesses == 0) {
+                System.out.println("There is no \"" + letter + "\" in the artist name.");
                 guessCounter--;
                 if (guessCounter == 0) {
                     break;
                 }
                 System.out.println("You still have " + guessCounter + " guesses.");
             }
-        } while (!(Arrays.toString(guess).equals(artist.toLowerCase())));
+        } while (!(Arrays.toString(guess).equals(Arrays.toString(artistChar).toLowerCase())));
         scanner.close();
 
         if (won) {
-            System.out.println("Congratulations! You got it!");
+            System.out.println("Congratulations! You got it! The answer is \"" + artist + "\".");
         } else {
             System.out.println("You've lost. The artist we're asking for was " + artist + ".");
         }
