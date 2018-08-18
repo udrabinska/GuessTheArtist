@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class GuessTheArtist {
     public static void main(String[] args) {
         String artist = "Adam Mickiewicz";
-        char[] artistChar = artist.toLowerCase().toCharArray();
+        char[] artistChar = artist.toCharArray();
         char[] guess = new char[artist.length()];
         // TODO: how to hide space with '-' but allow guessing it as well as char (or winning without guessing it at all)
         for (int i = 0; i < artist.length(); i++) {
@@ -29,14 +29,13 @@ public class GuessTheArtist {
             System.out.println(" ");
             System.out.println("Guess the letter.");
             char letter = scanner.next().charAt(0);
-            // TODO: allow the user to type only one letter / ensure it's only one letter
+            // TODO: allow the user to type only one letter / ensure it's only one letter / let him know we take the first char
             System.out.println("Your letter: " + letter);
 
-            // TODO: reveal upper cases when it's needed
             int goodGuesses = 0;
             for (int k = 0; k < artist.length(); k++) {
-                if (letter == artistChar[k]) {
-                    guess[k] = letter;
+                if (Character.toUpperCase(letter) == artistChar[k] || Character.toLowerCase(letter) == artistChar[k]) {
+                    guess[k] = artistChar[k];
                     goodGuesses++;
                     if (Arrays.toString(guess).equals(Arrays.toString(artistChar).toLowerCase())) {
                         won = true;
