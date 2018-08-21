@@ -14,7 +14,6 @@ public class GuessTheArtist {
 
         char[] artistChar = artist.toCharArray();
         char[] guess = new char[artist.length()];
-        // TODO: how to hide space with '-' but allow guessing it as well as char (or winning without guessing it at all)
         for (int i = 0; i < artist.length(); i++) {
             if (!Character.isWhitespace(artist.charAt(i))) {
                 guess[i] = '-';
@@ -30,6 +29,9 @@ public class GuessTheArtist {
         scanner.nextLine();
         System.out.println();
 
+        ArrayList<Character> wrongLetters = new ArrayList<>();
+        ArrayList<Character> goodLetters = new ArrayList<>();
+
         do {
             for (int j = 0; j < artist.length(); j++) {
                 System.out.print(guess[j]);
@@ -38,6 +40,7 @@ public class GuessTheArtist {
             System.out.println("Guess the letter.");
             char letter = scanner.next().charAt(0);
             // TODO: allow the user to type only one letter / ensure it's only one letter / let him know we take the first char
+            // TODO if int typed - let know something is wrong?
 
             int goodGuesses = 0;
             for (int k = 0; k < artist.length(); k++) {
@@ -51,13 +54,25 @@ public class GuessTheArtist {
                 }
             }
             if (goodGuesses != 0) {
-                System.out.println("Good shot! " + goodGuesses + " \"" + Character.toLowerCase(letter) + "\" in the artist's name.");
+                if (goodLetters.contains(letter)) {
+                    System.out.println("You've already typed  \"" + letter + "\" and I showed you all I have.");
+                    System.out.println("Try another letter.");
+                } else {
+                    System.out.println("Good shot! " + goodGuesses + " \"" + Character.toLowerCase(letter) + "\" in the artist's name.");
+                    goodLetters.add(letter);
+                }
             } else {
-                // TODO: add wrong letter to the list to avoid repeating them (counting bad guess twice (+ if/else - 1st time typed and repeated)
                 System.out.println("There is no \"" + letter + "\" in the artist name.");
-                guessCounter--;
+                if (wrongLetters.contains(letter)) {
+                    System.out.println("You've already typed \"" + letter + "\"! I'm not counting this guess.");
+                } else {
+                    guessCounter--;
+                    wrongLetters.add(letter);
+                }
                 if (guessCounter == 0) {
                     break;
+                } else if (guessCounter == 1) {
+                    System.out.println("You've got ONE last try. Be careful!");
                 }
                 System.out.println("You still have " + guessCounter + " guesses.");
             }
@@ -65,10 +80,12 @@ public class GuessTheArtist {
         scanner.close();
 
         if (won) {
-            System.out.println("Congratulations! You got it! The answer is \"" + artist + "\".");
+            System.out.println("Congratulations, you got it! The answer is \"" + artist + "\".");
+            // TODO: in the future: short bio about artist.
         } else {
             System.out.println("You've lost. The artist we're asking for was " + artist + ".");
         }
+        // TODO: want to play again?
     }
 
     private static ArrayList<String> readFile(File file) {
