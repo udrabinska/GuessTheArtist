@@ -38,9 +38,11 @@ public class GuessTheArtist {
             }
             System.out.println(" ");
             System.out.println("Guess the letter.");
+            while (!scanner.hasNext("[A-Za-z]")) {
+                System.out.println("Give me just one letter.");
+                scanner.next();
+            }
             char letter = scanner.next().charAt(0);
-            // TODO: allow the user to type only one letter / ensure it's only one letter / let him know we take the first char
-            // TODO if int typed - let know something is wrong?
 
             int goodGuesses = 0;
             for (int k = 0; k < artist.length(); k++) {
